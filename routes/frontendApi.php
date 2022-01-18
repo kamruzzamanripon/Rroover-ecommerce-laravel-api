@@ -4,9 +4,11 @@ use App\Http\Controllers\Frontend\BannerController;
 use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\ListController;
 use App\Http\Controllers\Frontend\ProductController;
+use App\Http\Controllers\Frontend\UserController;
 use Illuminate\Support\Facades\Route;
 
 //http://localhost:8000/api/v1/frontend/test
+
 // Route::get( 'test', function () {
 //     return "hello Ripon, how are youxxx";
 // } );
@@ -35,5 +37,17 @@ Route::get( 'exclusive-deals', [ProductController::class, 'exclusiveDeals'] );
 Route::get( 'flash-deals', [ProductController::class, 'flashDeals'] );
 Route::get( 'super-sales', [ProductController::class, 'superSales'] );
 
-Route::post('add-wishlist', [CartController::class, 'addWishList']);
-Route::get('all-wishlist', [CartController::class, 'allWishList']);
+Route::post( 'add-wishlist', [CartController::class, 'addWishList'] );
+//Route::get( 'all-wishlist', [CartController::class, 'allWishList'] );
+
+Route::post( 'user-login', [UserController::class, 'login'] );
+Route::post( 'user-register', [UserController::class, 'register'] );
+Route::post( 'password/forgot-password', [UserController::class, 'sendResetLinkResponse'] );
+Route::post( 'password/reset', [UserController::class, 'sendResetResponse'] );
+
+Route::group( ['middleware' => ['auth:user', 'scopes:user']], function () {
+    Route::post( 'user-logout', [UserController::class, 'logOut'] );
+    Route::post( 'password-change', [UserController::class, 'passwordChange'] );
+
+    Route::get( 'all-wishlist', [CartController::class, 'allWishList'] );
+} );

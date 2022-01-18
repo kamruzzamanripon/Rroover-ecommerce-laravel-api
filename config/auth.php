@@ -11,10 +11,10 @@ return [
     | reset options for your application. You may change these defaults
     | as required, but they're a perfect start for most applications.
     |
-    */
+     */
 
-    'defaults' => [
-        'guard' => 'web',
+    'defaults'         => [
+        'guard'     => 'user',
         'passwords' => 'users',
     ],
 
@@ -33,12 +33,22 @@ return [
     |
     | Supported: "session"
     |
-    */
+     */
 
-    'guards' => [
-        'web' => [
-            'driver' => 'session',
+    'guards'           => [
+        'web'   => [
+            'driver'   => 'session',
             'provider' => 'users',
+        ],
+
+        'user'  => [
+            'driver'   => 'passport',
+            'provider' => 'users',
+        ],
+
+        'admin' => [
+            'driver'   => 'passport',
+            'provider' => 'admins',
         ],
     ],
 
@@ -57,18 +67,18 @@ return [
     |
     | Supported: "database", "eloquent"
     |
-    */
+     */
 
-    'providers' => [
-        'users' => [
+    'providers'        => [
+        'users'  => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'model'  => App\Models\User::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'admins' => [
+            'driver' => 'eloquent',
+            'model'  => App\Models\Admin::class,
+        ],
     ],
 
     /*
@@ -84,13 +94,19 @@ return [
     | considered valid. This security feature keeps tokens short-lived so
     | they have less time to be guessed. You may change this as needed.
     |
-    */
+     */
 
-    'passwords' => [
-        'users' => [
+    'passwords'        => [
+        'users'  => [
             'provider' => 'users',
-            'table' => 'password_resets',
-            'expire' => 60,
+            'table'    => 'password_resets',
+            'expire'   => 60,
+            'throttle' => 60,
+        ],
+        'admins' => [
+            'provider' => 'admins',
+            'table'    => 'password_resets',
+            'expire'   => 60,
             'throttle' => 60,
         ],
     ],
@@ -104,7 +120,7 @@ return [
     | times out and the user is prompted to re-enter their password via the
     | confirmation screen. By default, the timeout lasts for three hours.
     |
-    */
+     */
 
     'password_timeout' => 10800,
 
