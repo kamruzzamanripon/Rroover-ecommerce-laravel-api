@@ -13,21 +13,67 @@ class CartController extends Controller {
         $this->CartRepository = $CartRepository;
     }
 
-    public function addWishList( Request $request ) {
-        //return response()->json( $request->user_id );
+    public function addCart( Request $request ) {
+
         try {
 
-            $addWishListData = $this->CartRepository->addWishList( $request );
+            $addCartData = $this->CartRepository->addCart( $request );
 
             return response()->json( [
                 'success' => true,
-                'message' => 'Wishlist Respons Successfully',
-                'data'    => $addWishListData,
+                'message' => 'Product Cart Information',
+                'data'    => $addCartData,
             ], 200 );
 
         } catch ( \Exception $e ) {
 
-            //throw new \Exception( 'url not correct ' );
+            $error = $e->getMessage();
+            return response()->json( [
+                'success' => false,
+                'message' => 'There is some Problems',
+                'data'    => $error,
+            ], 203 );
+
+        }
+    }
+
+    public function cartList() {
+
+        try {
+
+            $cartListData = $this->CartRepository->cartList();
+
+            return response()->json( [
+                'success' => true,
+                'message' => 'Product Cart Information',
+                'data'    => $cartListData,
+            ], 200 );
+
+        } catch ( \Exception $e ) {
+
+            $error = $e->getMessage();
+            return response()->json( [
+                'success' => false,
+                'message' => 'There is some Problems',
+                'data'    => $error,
+            ], 203 );
+
+        }
+    }
+
+    public function updateCart( Request $request ) {
+
+        try {
+
+            $updateCartData = $this->CartRepository->updateCart( $request );
+
+            return response()->json( [
+                'success' => true,
+                'message' => 'Product Cart Information',
+                'data'    => $updateCartData,
+            ], 200 );
+
+        } catch ( \Exception $e ) {
 
             $error = $e->getMessage();
             return response()->json( [
@@ -40,14 +86,15 @@ class CartController extends Controller {
 
     }
 
-    public function allWishList( Request $request ) {
+    public function deleteCart($productId){
 
-        $allWishListData = $this->CartRepository->allWishList( $request );
+        $deleteCartData = $this->CartRepository->deleteCart($productId);
 
         return response()->json( [
             'success' => true,
-            'message' => 'Wishlist Respons Successfully',
-            'data'    => $allWishListData,
+            'message' => 'Delete Cart Information',
+            'data'    => $deleteCartData,
         ], 200 );
     }
+
 }

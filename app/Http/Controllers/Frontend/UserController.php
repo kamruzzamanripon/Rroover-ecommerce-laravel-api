@@ -99,7 +99,7 @@ class UserController extends Controller {
     }
 
     public function register( RegisterRequest $request ) {
-        //$request->failedValidation
+
         try {
 
             $newUser = $this->authRepository->register( $request );
@@ -122,6 +122,7 @@ class UserController extends Controller {
 
     }
 
+    //Forget Passport 1st Step
     public function sendResetLinkResponse( Request $request ) {
 
         $input = $request->only( 'email' );
@@ -148,6 +149,7 @@ class UserController extends Controller {
         ] );
     }
 
+    //Forget Passport 2nd Step
     public function sendResetResponse( Request $request ) {
         //password.reset
         $input = $request->only( 'email', 'token', 'password', 'password_confirmation' );

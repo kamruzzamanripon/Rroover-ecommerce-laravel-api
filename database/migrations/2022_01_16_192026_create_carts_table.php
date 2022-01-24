@@ -15,6 +15,11 @@ class CreateCartsTable extends Migration {
             $table->id();
             $table->string( 'user_id' );
             $table->string( 'product_id' );
+            $table->string( 'color' )->nullable();
+            $table->string( 'size' )->nullable();
+            $table->string( 'quantity' );
+            $table->string( 'actual_price' );
+            $table->string( 'discount_price' )->nullable();
             $table->timestamps();
         } );
     }
