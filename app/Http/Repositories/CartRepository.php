@@ -3,6 +3,7 @@
 namespace App\Http\Repositories;
 
 use App\Models\Cart;
+use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
 
 class CartRepository {
@@ -21,10 +22,10 @@ class CartRepository {
         if ( Auth::check() ) {
             if ( !empty( $check ) ) {
 
-                if ( $check->color !== $color || $check->size !== $size ) {
+                if ( $check->color !== $color || $check->size !== $size || $check->quantity !== $quantity ) {
                     $addCartData = new Cart();
 
-                    $addCartData->user_id = Auth::id();
+                    $addCartData->user_id = $user_id;
                     $addCartData->product_id = $product_id;
                     $addCartData->color = $color;
                     $addCartData->size = $size;
@@ -108,7 +109,7 @@ class CartRepository {
 
             $cartListData = [
                 'data'    => $updateCartData,
-                'message' => "Please Login your Account",
+                'message' => "Update your Cart",
             ];
             return $cartListData;
 
@@ -138,4 +139,67 @@ class CartRepository {
             return $deleteCartData;
         }
     }
+
+    public function orderPlace( $request ) {
+
+        $user_id = $request->user_id;
+        $invoice_no = ( rand( 10009870, 100000 ) );
+        $total_price = $request->total_price;
+        $payment_method = $request->payment_method ? $request->payment_method : "Cash on Delivery";
+        $payment_status = $request->payment_status ? $request->payment_status : 0;
+        $payment_trx = $request->payment_trx;
+        $order_status = 1;
+        $note = $request->note;
+
+        date_default_timezone_set( "Asia/Dhaka" );
+        $order_date = date( "d-m-Y" );
+        $order_time = date( "h:i:sa" );
+
+        $cartData = Cart::where( 'user_id', $user_id )->get();
+
+        //Retrive Data from cart and convert array
+        $productIdArray = [];
+        $quantityArray = [];
+        $colorArray = [];
+        $sizeArray = [];
+        $actualPriceArray = [];
+        $discountPriceArray = [];
+        foreach ( $cartData as $data ) {
+            $productIdArray[] = $data->product_id;
+            $quantityArray[] = $data->quantity;
+            $colorArray[] = $data->color;
+            $sizeArray[] = $data->size;
+            $actualPriceArray[] = $data->actual_price;
+            $discountPriceArray[] = $data->discount_price;
+        }
+
+        //Place Order
+        $orderData = new Order();
+
+        $orderData->invoice_no = $invoice_no;
+        $orderData->user_id = $user_id;
+        $orderData->product_id = json_encode( $productIdArray );
+        $orderData->quantity = json_encode( $quantityArray );
+        $orderData->color = json_encode( $colorArray );
+        $orderData->size = json_encode( $sizeArray );
+        $orderData->actual_price = json_encode( $actualPriceArray );
+        $orderData->discount_price = json_encode( $discountPriceArray );
+        $orderData->total_price = $total_price;
+        $orderData->payment_method = $payment_method;
+        $orderData->payment_status = $payment_status;
+        $orderData->payment_trx = $payment_trx;
+        $orderData->order_status = $order_status;
+        $orderData->note = $note;
+        $orderData->order_date = $order_date;
+        $orderData->order_time = $order_time;
+
+        $orderData->save();
+
+        if ( $orderData ) {
+            $cartDelete = Cart::where( 'user_id', $user_id )->delete();
+        }
+
+        return $orderData;
+    }
+
 }

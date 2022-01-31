@@ -65,4 +65,8 @@ Route::group( ['middleware' => ['auth:user', 'scopes:user']], function () {
     Route::get( 'cart-list', [CartController::class, 'cartList'] );
     Route::post( 'update-cart', [CartController::class, 'updateCart'] );
     Route::delete( 'delete-cart/{productId}', [CartController::class, 'deleteCart'] );
+    Route::get( 'check-out/userinfo/{userId}', [CartController::class, 'userInfo'] );
+    Route::post( 'check-out/userinfo', [CartController::class, 'userInfoCheck'] );
+    Route::post( 'check-out/alter-shipinfo', [CartController::class, 'alterShippingInfo'] );
+    Route::post( 'check-out/place-order', [CartController::class, 'orderPlace'] );
 } );
