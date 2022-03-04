@@ -171,10 +171,12 @@ class UserController extends Controller {
         } );
         if ( $response == Password::PASSWORD_RESET ) {
             $message = "Password reset successfully";
+            $success = true;
         } else {
             $message = "Email could not be sent to this email address";
+            $success = false;
         }
-        $response = ['data' => '', 'message' => $message];
+        $response = ['success' => $success, 'message' => $message];
         return response()->json( $response );
     }
 

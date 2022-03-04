@@ -87,7 +87,6 @@ class UserController extends Controller {
 
         return response( [
             'message' => 'LogOut Success',
-            'token'   => $token,
         ] )->withCookie( $cookie );
     }
 }
