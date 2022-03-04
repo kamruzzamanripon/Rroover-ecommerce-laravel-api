@@ -18,4 +18,8 @@ Route::group( ['middleware' => ['auth:admin', 'scopes:admin']], function () {
     Route::post( 'category/{id}', [CategoryController::class, 'update'] );
     Route::delete( 'category/{id}', [CategoryController::class, 'destroy'] );
 
+    Route::get( 'sub-category', [CategoryController::class, 'indexSubcategory'] );
+    Route::post( 'sub-category/add', [CategoryController::class, 'storeSubcategory'] );
+    Route::post( 'sub-category/{id}', [CategoryController::class, 'updateSubcategory'] );
+    Route::delete( 'sub-category/{id}', [CategoryController::class, 'destroySubcategory'] );
 } );

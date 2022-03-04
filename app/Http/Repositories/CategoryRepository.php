@@ -3,6 +3,7 @@
 namespace App\Http\Repositories;
 
 use App\Http\Resources\CategoryResource;
+use App\Http\Resources\SubcategoryResource;
 use App\Models\category;
 use App\Models\product;
 use App\Models\subcategory;
@@ -108,7 +109,7 @@ class CategoryRepository {
         }
 
         $categoryupdate->name = $request->name ?? $request->name;
-        $categoryupdate->description = $request->description ?? $request->description;
+        $categoryupdate->description = $request->description ? $request->description : $categoryupdate->description;
         $categoryupdate->image = $request->file( 'image' ) ? 'storage/image/category/' . $image_name : $categoryupdate->image;
         $categoryupdate->save();
 
@@ -127,4 +128,71 @@ class CategoryRepository {
 
         return $categoryDelete;
     }
+
+    public function subcategoryIndex() {
+        $subCategoryListData = subcategory::with( 'category' )->get();
+
+        $categoryListData = SubcategoryResource::collection( $subCategoryListData );
+        return $categoryListData;
+    }
+
+    public function subcategoryStore( $request ) {
+
+        if ( $request->hasfile( 'image' ) ) {$destination_path = 'public/image/sub-category';
+            //$name=$file->getClientOriginalName();
+            $name = Carbon::now()->toDateString() . "_" . rand( 666561, 544614449 ) . "_." . $request->file( 'image' )->getClientOriginalExtension();
+            $path = $request->file( 'image' )->storeAs( $destination_path, $name );
+            $image = 'storage/image/sub-category/' . $name;
+        }
+
+        $subCategory = new subcategory();
+
+        $subCategory->name = $request->name;
+        $subCategory->description = $request->description;
+        $subCategory->image = $request->file( 'image' ) ? $image : '';
+        $subCategory->category_id = $request->category_id;
+        $subCategory->save();
+
+        $subCategoryData = new SubcategoryResource( $subCategory );
+        return $subCategoryData;
+    }
+
+    public function subcategoryUpdate( $request, $id ) {
+
+        $subCategoryupdate = subcategory::findOrFail( $id );
+
+        if ( $request->hasFile( 'image' ) ) {
+
+            if ( $subCategoryupdate->image ) {
+                unlink( $subCategoryupdate->image );
+            }
+
+            $destination_path = 'public/image/sub-category';
+            $image = $request->file( 'image' );
+            $image_name = Carbon::now()->toDateString() . "_" . rand( 666561, 544614449 ) . "_." . $request->image->getClientOriginalExtension();
+            $path = $request->file( 'image' )->storeAs( $destination_path, $image_name );
+        }
+
+        $subCategoryupdate->name = $request->name ?? $request->name;
+        $subCategoryupdate->description = $request->description ? $request->description : $subCategoryupdate->description;
+        $subCategoryupdate->image = $request->file( 'image' ) ? 'storage/image/sub-category/' . $image_name : $subCategoryupdate->image;
+        $subCategoryupdate->save();
+
+        $subCategoryData = new SubcategoryResource( $subCategoryupdate );
+        return $subCategoryData;
+    }
+
+    public function subcategoryDestroy( $id ) {
+
+        $subCategoryDelete = subcategory::where( 'id', $id )->first();
+        $image = $subCategoryDelete->image;
+        if ( $image ) {
+            unlink( $image );
+        }
+
+        $subCategoryDelete->delete();
+
+        return $subCategoryDelete;
+    }
+
 }

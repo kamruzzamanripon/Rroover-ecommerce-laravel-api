@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Http\Repositories\CategoryRepository;
 use App\Http\Requests\CategoryRequest;
+use App\Http\Requests\SubcategoryRequest;
 
 class CategoryController extends Controller {
 
@@ -39,11 +40,10 @@ class CategoryController extends Controller {
         }
     }
 
-
-    public function store(CategoryRequest $request) {
+    public function store( CategoryRequest $request ) {
         try {
 
-            $categoryData = $this->CategoryRepository->addCategory( $request);
+            $categoryData = $this->CategoryRepository->addCategory( $request );
 
             return response()->json( [
                 'success' => true,
@@ -65,8 +65,7 @@ class CategoryController extends Controller {
         }
     }
 
-
-    public function update(CategoryRequest $request , $id ) {
+    public function update( CategoryRequest $request, $id ) {
         try {
 
             $categoryData = $this->CategoryRepository->updateCategory( $request, $id );
@@ -91,7 +90,7 @@ class CategoryController extends Controller {
         }
     }
 
-    public function destroy($id) {
+    public function destroy( $id ) {
         try {
 
             $categoryData = $this->CategoryRepository->deleteCategory( $id );
@@ -115,4 +114,109 @@ class CategoryController extends Controller {
 
         }
     }
+
+    public function indexSubcategory() {
+        try {
+
+            $subCategoryData = $this->CategoryRepository->subcategoryIndex();
+
+            return response()->json( [
+                'success' => true,
+                'message' => 'sub-Category Data',
+                'data'    => $subCategoryData,
+            ], 200 );
+
+        } catch ( \Exception $e ) {
+
+            //throw new \Exception( 'url not correct ' );
+
+            $error = $e->getMessage();
+            return response()->json( [
+                'success' => false,
+                'message' => 'There is some Problems',
+                'data'    => $error,
+            ], 203 );
+
+        }
+    }
+
+    public function storeSubcategory(SubcategoryRequest $request){
+        try {
+
+            $subCategoryData = $this->CategoryRepository->subcategoryStore($request);
+
+            return response()->json( [
+                'success' => true,
+                'message' => 'sub-Category Data',
+                'data'    => $subCategoryData,
+            ], 200 );
+
+        } catch ( \Exception $e ) {
+
+            //throw new \Exception( 'url not correct ' );
+
+            $error = $e->getMessage();
+            return response()->json( [
+                'success' => false,
+                'message' => 'There is some Problems',
+                'data'    => $error,
+            ], 203 );
+
+        }
+    }
+
+    public function updateSubcategory(SubcategoryRequest $request, $id){
+        try {
+
+            $subCategoryData = $this->CategoryRepository->subcategoryUpdate($request , $id);
+
+            return response()->json( [
+                'success' => true,
+                'message' => 'sub-Category Data',
+                'data'    => $subCategoryData,
+            ], 200 );
+
+        } catch ( \Exception $e ) {
+
+            //throw new \Exception( 'url not correct ' );
+
+            $error = $e->getMessage();
+            return response()->json( [
+                'success' => false,
+                'message' => 'There is some Problems',
+                'data'    => $error,
+            ], 203 );
+
+        }
+    }
+
+
+    public function destroySubcategory ($id){
+        try {
+
+            $subCategoryData = $this->CategoryRepository->subcategoryDestroy($id);
+
+            return response()->json( [
+                'success' => true,
+                'message' => 'sub-Category Data',
+                'data'    => $subCategoryData,
+            ], 200 );
+
+        } catch ( \Exception $e ) {
+
+            //throw new \Exception( 'url not correct ' );
+
+            $error = $e->getMessage();
+            return response()->json( [
+                'success' => false,
+                'message' => 'There is some Problems',
+                'data'    => $error,
+            ], 203 );
+
+        }
+
+    }
+
+
+
 }
