@@ -4,6 +4,7 @@ namespace App\Http\Repositories;
 
 use App\Http\Resources\ProductResource;
 use App\Models\product;
+use Carbon\Carbon;
 
 class ProductRepository {
 
@@ -210,14 +211,6 @@ class ProductRepository {
         return $beautyHealthPeoductData;
     }
 
-    public function singleProduct( $id ) {
-
-        $singleProductData = product::where( 'id', $id )->first();
-        $singleProductData = new ProductResource( $singleProductData );
-
-        return $singleProductData;
-    }
-
     public function newArrivals() {
 
         $newArrivalsData = product::where( 'featured', "1" )->get();
@@ -244,6 +237,145 @@ class ProductRepository {
         $superSalesData = product::where( 'best_selling', "1" )->get();
 
         return $superSalesData;
+    }
+
+    public function productAll() {
+
+        $productAll = product::with( 'category', 'subcategory', 'brand' )->get();
+
+        $productAllData = ProductResource::collection( $productAll );
+        return $productAllData;
+
+    }
+
+    public function singleProduct( $id ) {
+
+        $singleProductData = product::where( 'id', $id )->first();
+        $singleProductData = new ProductResource( $singleProductData );
+
+        return $singleProductData;
+    }
+
+    public function storeProduct( $request ) {
+
+        $data = [];
+        if ( $request->hasfile( 'image' ) ) {
+
+            $destination_path = 'public/image/products';
+            //$name=$file->getClientOriginalName();
+            foreach ( $request->file( 'image' ) as $file ) {
+
+                $name = Carbon::now()->toDateString() . "_" . rand( 666561, 544614449 ) . "_." . $file->getClientOriginalExtension();
+                $path = $file->storeAs( $destination_path, $name );
+                $data[] = 'storage/image/products/' . $name;
+            }
+        }
+
+        //convert [comma seperate]size date into array
+        $commaSeperateSize = $request->size;
+        $arrayConvertSize = explode( ',', $commaSeperateSize );
+
+        //convert [comma seperate]color date into array
+        $commaSeperateColors = $request->color;
+        $arrayConvertColors = explode( ',', $commaSeperateColors );
+
+        $newProduct = new product();
+
+        $newProduct->category_id = $request->category_id;
+        $newProduct->brand_id = $request->brand_id;
+        $newProduct->subcategorie_id = $request->subcategorie_id;
+        $newProduct->name = $request->name;
+        $newProduct->product_code = rand( 5466545, 1656556 );
+        $newProduct->quantity = $request->quantity;
+        $newProduct->details = $request->details;
+        $newProduct->color = json_encode( $arrayConvertColors );
+        $newProduct->size = json_encode( $arrayConvertSize );
+        $newProduct->actual_price = $request->actual_price;
+        $newProduct->discount_price = $request->discount_price;
+        $newProduct->video_link = $request->video_link;
+        $newProduct->best_selling = $request->best_selling ? $request->best_selling : 0;
+        $newProduct->top_rating = $request->top_rating ? $request->top_rating : 0;
+        $newProduct->featured = $request->featured ? $request->featured : 0;
+        $newProduct->hot = $request->hot ? $request->hot : 0;
+        $newProduct->sale = $request->sale ? $request->sale : 0;
+        $newProduct->status = $request->status ? $request->status : 0;
+        $newProduct->image = $request->file( 'image' ) ? json_encode( $data ) : '';
+        $newProduct->save();
+
+        $newProductData = new ProductResource( $newProduct );
+        return $newProductData;
+    }
+
+    public function singleProductUpdate( $request, $id ) {
+
+        $productUpdate = product::findOrFail( $id );
+
+        $data = [];
+        if ( $request->hasfile( 'image' ) ) {
+
+            if ( $productUpdate->image ) {
+                $oldImages = json_decode( $productUpdate->image );
+                foreach ( $oldImages as $oldImage ) {
+                    unlink( $oldImage );
+                }
+            }
+
+            $destination_path = 'public/image/products';
+            //$name=$file->getClientOriginalName();
+            foreach ( $request->file( 'image' ) as $file ) {
+
+                $name = Carbon::now()->toDateString() . "_" . rand( 666561, 544614449 ) . "_." . $file->getClientOriginalExtension();
+                $path = $file->storeAs( $destination_path, $name );
+                $data[] = 'storage/image/products/' . $name;
+            }
+        }
+
+        //convert [comma seperate]size date into array
+        $commaSeperateSize = $request->size;
+        $arrayConvertSize = explode( ',', $commaSeperateSize );
+
+        //convert [comma seperate]color date into array
+        $commaSeperateColors = $request->color;
+        $arrayConvertColors = explode( ',', $commaSeperateColors );
+
+        $productUpdate->category_id = $request->category_id ? $request->category_id : $productUpdate->category_id;
+        $productUpdate->brand_id = $request->brand_id ? $request->brand_id : $productUpdate->brand_id;
+        $productUpdate->subcategorie_id = $request->subcategorie_id ? $request->subcategorie_id : $productUpdate->subcategorie_id;
+        $productUpdate->name = $request->name ? $request->name : $productUpdate->name;
+        $productUpdate->quantity = $request->quantity ? $request->quantity : $productUpdate->quantity;
+        $productUpdate->details = $request->details ? $request->details : $productUpdate->details;
+        $productUpdate->color = $arrayConvertColors ? json_encode( $arrayConvertColors ) : $productUpdate->color;
+        $productUpdate->size = $arrayConvertSize ? json_encode( $arrayConvertSize ) : $productUpdate->size;
+        $productUpdate->actual_price = $request->actual_price ? $request->actual_price : $productUpdate->actual_price;
+        $productUpdate->discount_price = $request->discount_price ? $request->discount_price : $productUpdate->discount_price;
+        $productUpdate->video_link = $request->video_link ? $request->video_link : $productUpdate->video_link;
+        $productUpdate->best_selling = $request->best_selling ? $request->best_selling : 0;
+        $productUpdate->top_rating = $request->top_rating ? $request->top_rating : 0;
+        $productUpdate->featured = $request->featured ? $request->featured : 0;
+        $productUpdate->hot = $request->hot ? $request->hot : 0;
+        $productUpdate->sale = $request->sale ? $request->sale : 0;
+        $productUpdate->status = $request->status ? $request->status : 0;
+        $productUpdate->image = $request->file( 'image' ) ? json_encode( $data ) : '';
+        $productUpdate->save();
+
+        $productUpdateData = new ProductResource( $productUpdate );
+        return $productUpdateData;
+    }
+
+    public function singleProductDestory( $id ) {
+
+        $productDelete = product::where( 'id', $id )->first();
+
+        if ( $productDelete->image ) {
+            $oldImages = json_decode( $productDelete->image );
+            foreach ( $oldImages as $oldImage ) {
+                unlink( $oldImage );
+            }
+        }
+
+        $productDelete->delete();
+
+        return $productDelete;
     }
 
 }

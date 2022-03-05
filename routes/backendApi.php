@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Backend\CategoryController;
+use App\Http\Controllers\Backend\ProductController;
 use App\Http\Controllers\Backend\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,4 +23,10 @@ Route::group( ['middleware' => ['auth:admin', 'scopes:admin']], function () {
     Route::post( 'sub-category/add', [CategoryController::class, 'storeSubcategory'] );
     Route::post( 'sub-category/{id}', [CategoryController::class, 'updateSubcategory'] );
     Route::delete( 'sub-category/{id}', [CategoryController::class, 'destroySubcategory'] );
+
+    Route::get( 'product/all', [ProductController::class, 'allProduct'] );
+    Route::post( 'product/store', [ProductController::class, 'storeProduct'] );
+    Route::get( 'product/single/{id}', [ProductController::class, 'singleProduct'] );
+    Route::post( 'product/single/{id}', [ProductController::class, 'singleProductUpdate'] );
+    Route::delete( 'product/single/{id}', [ProductController::class, 'singleProductDestory'] );
 } );
