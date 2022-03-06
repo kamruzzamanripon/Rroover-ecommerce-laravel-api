@@ -46,4 +46,40 @@ class BackendAuthRepository {
         return $userProfile;
     }
 
+    public function adminRegister( $request ) {
+
+        $author = new Admin();
+
+        // if($request->hasfile('image')){
+
+        //     $destination_path = 'public/image/user';
+        //     //$name=$file->getClientOriginalName();
+        //     $name = Carbon::now()->toDateString()."_".rand(666561, 544614449)."_.".$request->file('image')->getClientOriginalExtension();
+        //     $path = $request->file('image')->storeAs($destination_path, $name);
+        //     $image_path = 'storage/image/user/' . $name;
+
+        // }
+
+        $author->name = $request->name;
+        $author->type = $request->type ? $request->type : 'user';
+        $author->email = $request->email;
+        $author->password = Hash::make( $request->password );
+        //$author->avatar = $image_path;
+        $author->save();
+
+        return $author;
+    }
+
+    public function passwordChange( $request ) {
+        
+        if ( auth()->user()->email === $request->email ) {
+
+            $userInfo = Admin::find( auth()->user()->id )->update( ['password' => Hash::make( $request->new_password )] );
+            return $userInfo;
+        } else {
+            return "you art not authorized";
+        }
+
+    }
+
 }

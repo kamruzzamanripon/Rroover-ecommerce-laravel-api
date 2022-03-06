@@ -9,12 +9,19 @@ use Illuminate\Support\Facades\Route;
 
 //http://localhost:8000/api/v1/backend/
 
-Route::post( 'user-login', [UserController::class, 'login'] );
+//Login Related Route
+Route::post( 'login', [UserController::class, 'login'] );
+Route::post( 'password/forgot-password', [UserController::class, 'forgotPassword'] );
+Route::post( 'password/forgot-password/reset', [UserController::class, 'forgotPasswordReset'] );
 
 Route::group( ['middleware' => ['auth:admin', 'scopes:admin']], function () {
 
     // Route::get( 'test', function () { return "hello Ripon, how are youxxx"; } );
-    Route::post( 'user-logout', [UserController::class, 'logOut'] );
+
+    //Login Related Route
+    Route::post( 'logout', [UserController::class, 'logOut'] );
+    Route::post( 'register', [UserController::class, 'adminRegister'] );
+    Route::post( 'password/password-change', [UserController::class, 'passwordChange'] );
 
     Route::get( 'category', [CategoryController::class, 'index'] );
     Route::post( 'category/add', [CategoryController::class, 'store'] );
@@ -37,10 +44,10 @@ Route::group( ['middleware' => ['auth:admin', 'scopes:admin']], function () {
     Route::post( 'brand/edit/{id}', [BrandController::class, 'brandUpdate'] );
     Route::get( 'brand/single/{id}', [BrandController::class, 'singleBrandProducts'] );
     Route::delete( 'brand/delete/{id}', [BrandController::class, 'destroyBrand'] );
-} );
 
-Route::get( 'banner/all', [BannerController::class, 'bannerAll'] );
-Route::post( 'banner/store', [BannerController::class, 'bannerStore'] );
-Route::get( 'banner/single/{id}', [BannerController::class, 'bannerSingleById'] );
-Route::post( 'banner/single/{id}', [BannerController::class, 'updateBannerSingleById'] );
-Route::delete( 'banner/single/{id}', [BannerController::class, 'deleteBannerSingleById'] );
+    Route::get( 'banner/all', [BannerController::class, 'bannerAll'] );
+    Route::post( 'banner/store', [BannerController::class, 'bannerStore'] );
+    Route::get( 'banner/single/{id}', [BannerController::class, 'bannerSingleById'] );
+    Route::post( 'banner/single/{id}', [BannerController::class, 'updateBannerSingleById'] );
+    Route::delete( 'banner/single/{id}', [BannerController::class, 'deleteBannerSingleById'] );
+} );
