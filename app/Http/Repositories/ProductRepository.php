@@ -335,8 +335,11 @@ class ProductRepository {
         $arrayConvertSize = explode( ',', $commaSeperateSize );
 
         //convert [comma seperate]color date into array
+
         $commaSeperateColors = $request->color;
         $arrayConvertColors = explode( ',', $commaSeperateColors );
+
+        //return dd( $arrayConvertColors );
 
         $productUpdate->category_id = $request->category_id ? $request->category_id : $productUpdate->category_id;
         $productUpdate->brand_id = $request->brand_id ? $request->brand_id : $productUpdate->brand_id;
@@ -344,8 +347,8 @@ class ProductRepository {
         $productUpdate->name = $request->name ? $request->name : $productUpdate->name;
         $productUpdate->quantity = $request->quantity ? $request->quantity : $productUpdate->quantity;
         $productUpdate->details = $request->details ? $request->details : $productUpdate->details;
-        $productUpdate->color = $arrayConvertColors ? json_encode( $arrayConvertColors ) : $productUpdate->color;
-        $productUpdate->size = $arrayConvertSize ? json_encode( $arrayConvertSize ) : $productUpdate->size;
+        $productUpdate->color = $request->color ? json_encode( $arrayConvertColors ) : $productUpdate->color;
+        $productUpdate->size = $request->size ? json_encode( $arrayConvertSize ) : $productUpdate->size;
         $productUpdate->actual_price = $request->actual_price ? $request->actual_price : $productUpdate->actual_price;
         $productUpdate->discount_price = $request->discount_price ? $request->discount_price : $productUpdate->discount_price;
         $productUpdate->video_link = $request->video_link ? $request->video_link : $productUpdate->video_link;
@@ -355,7 +358,7 @@ class ProductRepository {
         $productUpdate->hot = $request->hot ? $request->hot : 0;
         $productUpdate->sale = $request->sale ? $request->sale : 0;
         $productUpdate->status = $request->status ? $request->status : 0;
-        $productUpdate->image = $request->file( 'image' ) ? json_encode( $data ) : '';
+        $productUpdate->image = $request->file( 'image' ) ? json_encode( $data ) : $productUpdate->image;
         $productUpdate->save();
 
         $productUpdateData = new ProductResource( $productUpdate );

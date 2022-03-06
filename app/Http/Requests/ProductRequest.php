@@ -21,14 +21,21 @@ class ProductRequest extends FormRequest {
      */
     public function rules() {
 
-        return [
-            //'name' => 'required|string|max:258|unique:products',
-            //'quantity' => 'required',
-            //'color'        => ['required|string'],
-            //'actual_price' => ['required'],
-            //'image'        => ['required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'],
+        if ( request()->isMethod( 'post' ) ) {
+            return [
+                'name'         => 'required|string|max:258|unique:products',
+                'quantity'     => 'required',
+                'color'        => 'required|string',
+                'actual_price' => 'required',
+                'image'        => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
-        ];
+            ];
+        } else {
+            return [
+                'name' => 'string|max:258|unique:products',
+
+            ];
+        }
 
     }
 
@@ -37,21 +44,20 @@ class ProductRequest extends FormRequest {
      *
      * @return array
      */
-    // public function messages() {
-    //     if ( request()->isMethod( 'post' ) ) {
-    //         return [
-    //             'name.required' => 'Product Name is required!',
-    //             //'quantity.required'     => 'Product Quantity is required!',
-    //             //'color.required'        => 'color is required!',
-    //             //'actual_price.required' => 'actual_price is required!',
-    //             //'image.required'        => 'images is required!',
-    //             //'image.required' => 'image is required!',
-    //         ];
-    //     } else {
-    //         return [
-    //             'name.required' => 'Name is required!',
+    public function messages() {
+        if ( request()->isMethod( 'post' ) ) {
+            return [
+                'name.required'         => 'Product Name is required!',
+                'quantity.required'     => 'Product Quantity is required!',
+                'color.required'        => 'color is required!',
+                'actual_price.required' => 'actual_price is required!',
+                'image.required'        => 'images is required!',
+            ];
+        } else {
+            return [
+                //'name.unique' => 'Name is unique!',
 
-    //         ];
-    //     }
-    // }
+            ];
+        }
+    }
 }
