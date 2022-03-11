@@ -3,7 +3,9 @@
 use App\Http\Controllers\Backend\BannerController;
 use App\Http\Controllers\Backend\BrandController;
 use App\Http\Controllers\Backend\CategoryController;
+use App\Http\Controllers\Backend\PermissionsController;
 use App\Http\Controllers\Backend\ProductController;
+use App\Http\Controllers\Backend\RolePermissionController;
 use App\Http\Controllers\Backend\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -50,4 +52,19 @@ Route::group( ['middleware' => ['auth:admin', 'scopes:admin']], function () {
     Route::get( 'banner/single/{id}', [BannerController::class, 'bannerSingleById'] );
     Route::post( 'banner/single/{id}', [BannerController::class, 'updateBannerSingleById'] );
     Route::delete( 'banner/single/{id}', [BannerController::class, 'deleteBannerSingleById'] );
+
+    //role and permission
+    Route::get( 'role/all', [RolePermissionController::class, 'roleAll'] );
+    Route::get( 'role/single/{id}', [RolePermissionController::class, 'roleSingle'] );
+    Route::post( 'role/create', [RolePermissionController::class, 'roleCreate'] );
+    Route::post( 'role/update/{id}', [RolePermissionController::class, 'roleUpdate'] );
+    Route::delete( 'role/delete/{id}', [RolePermissionController::class, 'roleDelete'] );
+    Route::post( 'role/role-assign/{roleId}', [RolePermissionController::class, 'userRollAssign'] );
+    //role and permission
+    Route::get( 'permission/all', [PermissionsController::class, 'index'] );
+    Route::post( 'permission/store', [PermissionsController::class, 'store'] );
+    Route::post( 'permission/update/{id}', [PermissionsController::class, 'update'] );
+    Route::delete( 'permission/delete/{id}', [PermissionsController::class, 'destroy'] );
+    Route::post( 'permission/assign/{permissionId}', [PermissionsController::class, 'userPermissionAssign'] );
+
 } );

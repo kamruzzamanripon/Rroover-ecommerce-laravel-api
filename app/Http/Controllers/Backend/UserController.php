@@ -7,6 +7,7 @@ use App\Http\repositories\BackendAuthRepository;
 use App\Http\Requests\AdminForgotPasswordResetRequest;
 use App\Http\Requests\AdminRequest;
 use App\Http\Requests\PasswordChangeRequest;
+use App\Http\Resources\AdminResource;
 use App\Mail\ForgotMail;
 use App\Models\Admin;
 use Carbon\Carbon;
@@ -32,13 +33,17 @@ class UserController extends Controller {
             'password' => 'required',
         ] );
 
+        //if validation fail
         if ( $validator->fails() ) {
             return response()->json( ['error' => $validator->errors()->all()] );
         }
 
         try {
+
+            //check email
             $user = $this->authRepository->findUserByEmailAddress( $request->email );
 
+            //if email address true
             if ( isset( $user ) ) {
 
                 if ( $HashCheck = $this->authRepository->login( $request, $user ) ) {
@@ -47,10 +52,22 @@ class UserController extends Controller {
                     $tokenInfo['token'] = $user->createToken( 'MyApp', ['admin'] )->accessToken;
                     $cookie = cookie( 'token', $tokenInfo->token, 60 * 24 ); //1day
 
+                    $token = $tokenInfo->token;
+
+                    $adminUserResources = new AdminResource( $tokenInfo );
+
+                    //Super Admin create, first  run bleow this code 1st time than comment or delete
+                    // $role = Role::where( 'id', 21 )->with( 'permissions' )->first();
+                    // $user->roles()->detach();
+                    // $permissions = Permission::pluck( 'id', 'id' )->all();
+                    // $role->syncPermissions( $permissions );
+                    // $user->assignRole( [$role->id] );
+
                     return response()->json( [
                         "success"    => true,
                         "message"    => "User logged in successfully",
-                        "token_info" => $tokenInfo,
+                        "token_info" => $token,
+                        "user_info"  => $adminUserResources,
                     ] )->withCookie( $cookie );
                 } else {
 
@@ -130,10 +147,12 @@ class UserController extends Controller {
         $validator = Validator::make( $email, [
             'email' => "required|email",
         ] );
+
+        //Validation check
         if ( $validator->fails() ) {
             return response( ['errors' => $validator->errors()->all()], 422 );
         }
-
+        //mail check
         if ( Admin::where( 'email', $email )->doesntExist() ) {
             return response( ['errors' => "Email Invalid"], 422 );
         }
@@ -150,12 +169,6 @@ class UserController extends Controller {
                 'created_at' => Carbon::now(),
             ] );
 
-            // $resetTable = new Password_reset();
-            // $resetTable->email = $email;
-            // $resetTable->token = $token;
-            // $resetTable->save();
-
-            // return dd( $db );
             Mail::to( $email )->send( new ForgotMail( $token ) );
 
             return response( [

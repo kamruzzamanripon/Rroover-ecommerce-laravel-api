@@ -5,17 +5,20 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Http\Repositories\BrandRepository;
 use App\Http\Requests\BrandRequest;
-use Illuminate\Http\Request;
 
-class BrandController extends Controller
-{
+class BrandController extends Controller {
     public $BrandRepository;
 
     public function __construct( BrandRepository $BrandRepository ) {
         $this->BrandRepository = $BrandRepository;
+
+        $this->middleware( 'permission:brand.access|brand.create|brand.update|brand.delete', ['only' => ['brandList']] );
+        $this->middleware( 'permission:brand.create', ['only' => ['brandStore']] );
+        $this->middleware( 'permission:brand.update', ['only' => ['brandUpdate']] );
+        $this->middleware( 'permission:brand.delete', ['only' => ['destroyBrand']] );
     }
 
-    public function brandList(){
+    public function brandList() {
         try {
 
             $brandData = $this->BrandRepository->brandList();
@@ -40,10 +43,10 @@ class BrandController extends Controller
         }
     }
 
-    public function singleBrandProducts($id){
+    public function singleBrandProducts( $id ) {
         try {
 
-            $brandData = $this->BrandRepository->singleBrandProducts($id);
+            $brandData = $this->BrandRepository->singleBrandProducts( $id );
 
             return response()->json( [
                 'success' => true,
@@ -65,10 +68,10 @@ class BrandController extends Controller
         }
     }
 
-    public function brandStore(BrandRequest $request){
+    public function brandStore( BrandRequest $request ) {
         try {
 
-            $brandData = $this->BrandRepository->brandStore($request);
+            $brandData = $this->BrandRepository->brandStore( $request );
 
             return response()->json( [
                 'success' => true,
@@ -90,10 +93,10 @@ class BrandController extends Controller
         }
     }
 
-    public function brandUpdate(BrandRequest $request, $id){
+    public function brandUpdate( BrandRequest $request, $id ) {
         try {
 
-            $brandData = $this->BrandRepository->brandUpdate($request,  $id);
+            $brandData = $this->BrandRepository->brandUpdate( $request, $id );
 
             return response()->json( [
                 'success' => true,
@@ -115,10 +118,10 @@ class BrandController extends Controller
         }
     }
 
-    public function destroyBrand($id){
+    public function destroyBrand( $id ) {
         try {
 
-            $brandData = $this->BrandRepository->destroyBrand($id);
+            $brandData = $this->BrandRepository->destroyBrand( $id );
 
             return response()->json( [
                 'success' => true,

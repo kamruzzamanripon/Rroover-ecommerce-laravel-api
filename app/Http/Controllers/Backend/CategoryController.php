@@ -13,6 +13,12 @@ class CategoryController extends Controller {
 
     public function __construct( CategoryRepository $CategoryRepository ) {
         $this->CategoryRepository = $CategoryRepository;
+
+        //Subcategory Permissions
+        $this->middleware( 'permission:subcategory.access|subcategory.create|subcategory.update|subcategory.delete', ['only' => ['indexSubcategory']] );
+        $this->middleware( 'permission:subcategory.create', ['only' => ['storeSubcategory']] );
+        $this->middleware( 'permission:subcategory.update', ['only' => ['updateSubcategory']] );
+        $this->middleware( 'permission:subcategory.delete', ['only' => ['destroySubcategory']] );
     }
 
     public function index() {
@@ -140,10 +146,10 @@ class CategoryController extends Controller {
         }
     }
 
-    public function storeSubcategory(SubcategoryRequest $request){
+    public function storeSubcategory( SubcategoryRequest $request ) {
         try {
 
-            $subCategoryData = $this->CategoryRepository->subcategoryStore($request);
+            $subCategoryData = $this->CategoryRepository->subcategoryStore( $request );
 
             return response()->json( [
                 'success' => true,
@@ -165,10 +171,10 @@ class CategoryController extends Controller {
         }
     }
 
-    public function updateSubcategory(SubcategoryRequest $request, $id){
+    public function updateSubcategory( SubcategoryRequest $request, $id ) {
         try {
 
-            $subCategoryData = $this->CategoryRepository->subcategoryUpdate($request , $id);
+            $subCategoryData = $this->CategoryRepository->subcategoryUpdate( $request, $id );
 
             return response()->json( [
                 'success' => true,
@@ -190,11 +196,10 @@ class CategoryController extends Controller {
         }
     }
 
-
-    public function destroySubcategory ($id){
+    public function destroySubcategory( $id ) {
         try {
 
-            $subCategoryData = $this->CategoryRepository->subcategoryDestroy($id);
+            $subCategoryData = $this->CategoryRepository->subcategoryDestroy( $id );
 
             return response()->json( [
                 'success' => true,
@@ -216,7 +221,5 @@ class CategoryController extends Controller {
         }
 
     }
-
-
 
 }
