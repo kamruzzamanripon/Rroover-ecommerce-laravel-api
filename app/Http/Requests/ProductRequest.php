@@ -20,14 +20,13 @@ class ProductRequest extends FormRequest {
      * @return array
      */
     public function rules() {
-
         if ( request()->isMethod( 'post' ) ) {
             return [
                 'name'         => 'required|string|max:258|unique:products',
                 'quantity'     => 'required',
                 'color'        => 'required|string',
                 'actual_price' => 'required',
-                'image'        => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                //'image'        => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
             ];
         } else {
@@ -51,7 +50,7 @@ class ProductRequest extends FormRequest {
                 'quantity.required'     => 'Product Quantity is required!',
                 'color.required'        => 'color is required!',
                 'actual_price.required' => 'actual_price is required!',
-                'image.required'        => 'images is required!',
+                //'image.required'        => 'images is required!',
             ];
         } else {
             return [

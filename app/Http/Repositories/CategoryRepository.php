@@ -16,9 +16,21 @@ class CategoryRepository {
         $categoryListData = category::with( 'subcategory' )->get();
 
         $categoryListData = CategoryResource::collection( $categoryListData );
+
         return $categoryListData;
     }
 
+    public function backendCategoryList() {
+
+        $categoryListData = category::with( 'subcategory' )->orderBy( 'id', 'desc' )->paginate( 3 );
+
+        $categoryListData = CategoryResource::collection( $categoryListData )->response()->getData( true );
+
+        return $categoryListData;
+    }
+
+
+    //Single Category show by Id and also show catId related sub-category and producst    
     public function singleCategory( $id ) {
 
         $singleCategoryData = category::where( 'id', $id )->with( 'subcategory', 'products' )->first();
@@ -129,10 +141,18 @@ class CategoryRepository {
         return $categoryDelete;
     }
 
+    //Sub Category Function Start
     public function subcategoryIndex() {
         $subCategoryListData = subcategory::with( 'category' )->get();
 
         $categoryListData = SubcategoryResource::collection( $subCategoryListData );
+        return $categoryListData;
+    }
+
+    public function indexSubcategoryWithPagination() {
+        $subCategoryListData = subcategory::with( 'category' )->orderBy( 'id', 'desc' )->paginate( 5 );
+
+        $categoryListData = SubcategoryResource::collection( $subCategoryListData )->response()->getData( true );
         return $categoryListData;
     }
 

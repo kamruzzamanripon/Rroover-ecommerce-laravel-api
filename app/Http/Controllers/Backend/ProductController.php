@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Http\Repositories\ProductRepository;
 use App\Http\Requests\ProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 
 class ProductController extends Controller {
 
@@ -14,10 +15,11 @@ class ProductController extends Controller {
         $this->ProductRepository = $ProductRepository;
     }
 
+    ///product all with pagination and also include product related category, subcategory and brand information.
     public function allProduct() {
         try {
 
-            $allProductData = $this->ProductRepository->productAll();
+            $allProductData = $this->ProductRepository->productAllWithPagination();
 
             return response()->json( [
                 'success' => true,
@@ -65,14 +67,14 @@ class ProductController extends Controller {
     }
 
     public function storeProduct( ProductRequest $request ) {
-       
+
         try {
 
             $singleProductData = $this->ProductRepository->storeProduct( $request );
 
             return response()->json( [
                 'success' => true,
-                'message' => 'Product Data',
+                'message' => 'Product Data Add',
                 'data'    => $singleProductData,
             ], 200 );
 
@@ -90,7 +92,7 @@ class ProductController extends Controller {
         }
     }
 
-    public function singleProductUpdate (ProductRequest $request, $id){
+    public function singleProductUpdate( UpdateProductRequest $request, $id ) {
 
         try {
 
@@ -98,7 +100,7 @@ class ProductController extends Controller {
 
             return response()->json( [
                 'success' => true,
-                'message' => 'Product Data',
+                'message' => 'Product Data Update',
                 'data'    => $singleProductData,
             ], 200 );
 
@@ -116,14 +118,14 @@ class ProductController extends Controller {
         }
     }
 
-    public function singleProductDestory($id){
+    public function singleProductDestory( $id ) {
         try {
 
             $singleProductData = $this->ProductRepository->singleProductDestory( $id );
 
             return response()->json( [
                 'success' => true,
-                'message' => 'Product Data',
+                'message' => 'Product Data Delete',
                 'data'    => $singleProductData,
             ], 200 );
 

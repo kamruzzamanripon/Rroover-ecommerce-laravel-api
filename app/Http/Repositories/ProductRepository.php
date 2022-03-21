@@ -239,11 +239,22 @@ class ProductRepository {
         return $superSalesData;
     }
 
+    //product all without pagination and also include product related category, subcategory and brand information.
     public function productAll() {
 
         $productAll = product::with( 'category', 'subcategory', 'brand' )->get();
 
         $productAllData = ProductResource::collection( $productAll );
+        return $productAllData;
+
+    }
+
+    //product all without pagination and also include product related category, subcategory and brand information.
+    public function productAllWithPagination() {
+
+        $productAll = product::with( 'category', 'subcategory', 'brand' )->orderBy( 'id', 'desc' )->paginate( 10 );
+
+        $productAllData = ProductResource::collection( $productAll )->response()->getData( true );
         return $productAllData;
 
     }

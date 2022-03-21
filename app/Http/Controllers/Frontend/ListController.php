@@ -69,6 +69,7 @@ class ListController extends Controller {
 
     }
 
+    //Single Category show by Id and also show catId related sub-category and producst
     public function singleCategory( $id ) {
 
         try {

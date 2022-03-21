@@ -12,6 +12,13 @@ class BrandResource extends JsonResource {
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray( $request ) {
-        return parent::toArray( $request );
+        return [
+            'id'           => $this->id,
+            'name'         => $this->name,
+            'description'  => $this->description,
+            'image'        => $this->image,
+            'totalProduct' => count( $this->products ),
+        
+        ];
     }
 }

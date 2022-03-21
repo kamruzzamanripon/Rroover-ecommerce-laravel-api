@@ -16,11 +16,11 @@ class BannerController extends Controller {
     public function bannerAll() {
         try {
 
-            $brandData = $this->BannerRepository->bannerAll();
+            $brandData = $this->BannerRepository->bannerAllWithPagination();
 
             return response()->json( [
                 'success' => true,
-                'message' => 'Product Data',
+                'message' => 'Banner Data All',
                 'data'    => $brandData,
             ], 200 );
 
@@ -38,14 +38,14 @@ class BannerController extends Controller {
         }
     }
 
-    public function bannerSingleById($id){
+    public function bannerSingleById( $id ) {
         try {
 
-            $brandData = $this->BannerRepository->bannerSingleById($id);
+            $brandData = $this->BannerRepository->bannerSingleById( $id );
 
             return response()->json( [
                 'success' => true,
-                'message' => 'Product Data',
+                'message' => 'Banner Single Data',
                 'data'    => $brandData,
             ], 200 );
 
@@ -63,14 +63,14 @@ class BannerController extends Controller {
         }
     }
 
-    public function bannerStore(BannerRequest $request){
+    public function bannerStore( BannerRequest $request ) {
         try {
 
-            $brandData = $this->BannerRepository->bannerStore($request);
+            $brandData = $this->BannerRepository->bannerStore( $request );
 
             return response()->json( [
                 'success' => true,
-                'message' => 'Product Data',
+                'message' => 'Banner Data Add',
                 'data'    => $brandData,
             ], 200 );
 
@@ -88,14 +88,15 @@ class BannerController extends Controller {
         }
     }
 
-    public function updateBannerSingleById(BannerRequest $request, $id){
+    public function updateBannerSingleById( BannerRequest $request, $id ) {
+        
         try {
 
-            $brandData = $this->BannerRepository->updateBannerSingleById($request, $id);
+            $brandData = $this->BannerRepository->updateBannerSingleById( $request, $id );
 
             return response()->json( [
                 'success' => true,
-                'message' => 'Product Data',
+                'message' => 'Banner Data Update',
                 'data'    => $brandData,
             ], 200 );
 
@@ -113,14 +114,14 @@ class BannerController extends Controller {
         }
     }
 
-    public function deleteBannerSingleById($id){
+    public function deleteBannerSingleById( $id ) {
         try {
 
-            $brandData = $this->BannerRepository->deleteBannerSingleById($id);
+            $brandData = $this->BannerRepository->deleteBannerSingleById( $id );
 
             return response()->json( [
                 'success' => true,
-                'message' => 'Product Data',
+                'message' => 'Banner Data Delete',
                 'data'    => $brandData,
             ], 200 );
 

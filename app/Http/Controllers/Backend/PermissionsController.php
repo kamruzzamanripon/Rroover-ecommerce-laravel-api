@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PermissionResource;
 use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
 
 class PermissionsController extends Controller {
@@ -17,7 +19,43 @@ class PermissionsController extends Controller {
     public function index() {
         try {
 
-            $permissions = Permission::all();
+            //$permissions = Permission::all();
+            $Groups = DB::table( 'permissions' )->select( 'group_name as name' )->groupBy( 'group_name' )->get();
+
+            $GroupbyPermissions = [];
+            foreach ( $Groups as $group ) {
+                $Permissions = DB::table( 'permissions' )
+                    ->select( 'name', 'id' )
+                    ->where( 'group_name', $group->name )
+                    ->get();
+                $GroupbyPermissions[]['permissions'] = $Permissions;
+                $GroupbyPermissions[]['groupName'] = $group->name;
+            }
+            //$permissions = PermissionResource::collection( $permissions )->response()->getData( true );
+
+            return response()->json( [
+                "success"         => true,
+                "message"         => "Permission info",
+                "Permission_info" => $GroupbyPermissions,
+            ] );
+
+        } catch ( \Exception $e ) {
+
+            $error = $e->getMessage();
+            return response()->json( [
+                'success' => false,
+                'message' => 'There is some Problems',
+                'data'    => $error,
+            ], 500 );
+        }
+    }
+
+    public function indexAllWithPagination() {
+        try {
+
+            $permissions = Permission::orderBy( 'id', 'desc' )->paginate( 10 );
+
+            $permissions = PermissionResource::collection( $permissions )->response()->getData( true );
 
             return response()->json( [
                 "success"         => true,
@@ -58,7 +96,7 @@ class PermissionsController extends Controller {
 
             return response()->json( [
                 "success"         => true,
-                "message"         => "Permission info",
+                "message"         => "Permission Data Add",
                 "Permission_info" => $permissions,
             ] );
 
@@ -96,7 +134,7 @@ class PermissionsController extends Controller {
 
             return response()->json( [
                 "success"         => true,
-                "message"         => "Permission info",
+                "message"         => "Permission Data Update",
                 "Permission_info" => $permission,
             ] );
 
@@ -126,7 +164,7 @@ class PermissionsController extends Controller {
 
             return response()->json( [
                 "success"         => true,
-                "message"         => "Permission info",
+                "message"         => "Permission Data Delete",
                 "Permission_info" => $permission,
             ] );
 

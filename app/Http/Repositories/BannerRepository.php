@@ -22,6 +22,13 @@ class BannerRepository {
         return $bannerDataAll;
     }
 
+    public function bannerAllWithPagination() {
+        $bannerData = banner::orderBy( 'id', 'desc' )->paginate( 5 );
+
+        $bannerDataAll = BannerResource::collection( $bannerData )->response()->getData( true );
+        return $bannerDataAll;
+    }
+
     public function singleBanner() {
 
         $singleBannerData = banner::all()->random( 1 );

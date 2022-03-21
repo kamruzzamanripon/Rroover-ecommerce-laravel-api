@@ -26,11 +26,13 @@ Route::group( ['middleware' => ['auth:admin', 'scopes:admin']], function () {
     Route::post( 'password/password-change', [UserController::class, 'passwordChange'] );
 
     Route::get( 'category', [CategoryController::class, 'index'] );
+    Route::get( 'category/list-without-pagination', [CategoryController::class, 'listWithourPagination'] );
     Route::post( 'category/add', [CategoryController::class, 'store'] );
     Route::post( 'category/{id}', [CategoryController::class, 'update'] );
+    Route::get( 'category/{id}', [CategoryController::class, 'singleCategorybyId'] );
     Route::delete( 'category/{id}', [CategoryController::class, 'destroy'] );
 
-    Route::get( 'sub-category', [CategoryController::class, 'indexSubcategory'] );
+    Route::get( 'sub-category', [CategoryController::class, 'indexSubcategoryWithPagination'] );
     Route::post( 'sub-category/add', [CategoryController::class, 'storeSubcategory'] );
     Route::post( 'sub-category/{id}', [CategoryController::class, 'updateSubcategory'] );
     Route::delete( 'sub-category/{id}', [CategoryController::class, 'destroySubcategory'] );
@@ -38,10 +40,11 @@ Route::group( ['middleware' => ['auth:admin', 'scopes:admin']], function () {
     Route::get( 'product/all', [ProductController::class, 'allProduct'] );
     Route::post( 'product/store', [ProductController::class, 'storeProduct'] );
     Route::get( 'product/single/{id}', [ProductController::class, 'singleProduct'] );
-    Route::put( 'product/single/{id}', [ProductController::class, 'singleProductUpdate'] );
+    Route::post( 'product/single/{id}', [ProductController::class, 'singleProductUpdate'] );
     Route::delete( 'product/single/{id}', [ProductController::class, 'singleProductDestory'] );
 
     Route::get( 'brand/all', [BrandController::class, 'brandList'] );
+    Route::get( 'brand/allwithoutpagination', [BrandController::class, 'brandListWithOutPagination'] );
     Route::post( 'brand/store', [BrandController::class, 'brandStore'] );
     Route::post( 'brand/edit/{id}', [BrandController::class, 'brandUpdate'] );
     Route::get( 'brand/single/{id}', [BrandController::class, 'singleBrandProducts'] );
@@ -55,6 +58,7 @@ Route::group( ['middleware' => ['auth:admin', 'scopes:admin']], function () {
 
     //role and permission
     Route::get( 'role/all', [RolePermissionController::class, 'roleAll'] );
+    Route::get( 'role/all/pagination', [RolePermissionController::class, 'roleAllWithPagination'] );
     Route::get( 'role/single/{id}', [RolePermissionController::class, 'roleSingle'] );
     Route::post( 'role/create', [RolePermissionController::class, 'roleCreate'] );
     Route::post( 'role/update/{id}', [RolePermissionController::class, 'roleUpdate'] );
@@ -62,6 +66,7 @@ Route::group( ['middleware' => ['auth:admin', 'scopes:admin']], function () {
     Route::post( 'role/role-assign/{roleId}', [RolePermissionController::class, 'userRollAssign'] );
     //role and permission
     Route::get( 'permission/all', [PermissionsController::class, 'index'] );
+    Route::get( 'permission/all/pagination', [PermissionsController::class, 'indexAllWithPagination'] );
     Route::post( 'permission/store', [PermissionsController::class, 'store'] );
     Route::post( 'permission/update/{id}', [PermissionsController::class, 'update'] );
     Route::delete( 'permission/delete/{id}', [PermissionsController::class, 'destroy'] );

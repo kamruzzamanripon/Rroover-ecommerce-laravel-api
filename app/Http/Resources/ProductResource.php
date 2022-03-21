@@ -24,6 +24,7 @@ class ProductResource extends JsonResource {
             'actual_price'     => $this->actual_price,
             'discount_price'   => $this->discount_price,
             'image'            => $this->image,
+            'singleImage'      => $this->image ? json_decode( $this->image )[0] : '',
             'video_link'       => $this->video_link,
             'category_info'    => $this->category,
             'subcategory_info' => $this->subcategory,
@@ -31,6 +32,8 @@ class ProductResource extends JsonResource {
             'featured'         => $this->featured,
             'hot'              => $this->hot,
             'sale'             => $this->sale,
+            'top_rating'       => $this->top_rating,
+            'best_selling'     => $this->best_selling,
             'similarProducts'  => product::where( 'subcategorie_id', $this->subcategorie_id )->get(),
 
         ];

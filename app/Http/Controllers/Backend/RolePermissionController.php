@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\RoleResource;
 use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,17 +18,39 @@ class RolePermissionController extends Controller {
 
             $roles = Role::all();
 
-            $permission_groups = Admin::getpermissionGroups();
-
-            $Allpermission = Permission::get();
+            //$permission_groups = Admin::getpermissionGroups();
+            //$Allpermission = Permission::get();
 
             return response()->json( [
-                "success"           => true,
-                "message"           => "Role all data",
-                "roles"             => $roles,
-                "permissions_group" => $permission_groups,
-                "Allpermission"     => $Allpermission,
+                "success" => true,
+                "message" => "Role all data",
+                "roles"   => $roles,
+            ] );
+        } catch ( \Exception $e ) {
 
+            $error = $e->getMessage();
+            return response()->json( [
+                'success' => false,
+                'message' => 'There is some Problems',
+                'data'    => $error,
+            ], 500 );
+        }
+    }
+
+    public function roleAllWithPagination() {
+        try {
+
+            $roles = Role::with( 'permissions' )->orderBy( 'id', 'desc' )->paginate( 10 );
+
+            $roles = RoleResource::collection( $roles )->response()->getData( true );
+
+            //$permission_groups = Admin::getpermissionGroups();
+            //$Allpermission = Permission::get();
+
+            return response()->json( [
+                "success" => true,
+                "message" => "Role all data",
+                "roles"   => $roles,
             ] );
 
         } catch ( \Exception $e ) {

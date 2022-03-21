@@ -2,12 +2,14 @@
 
 namespace App\Http\Repositories;
 
+use App\Http\Resources\BrandResource;
 use App\Models\band;
 use App\Models\product;
 use Carbon\Carbon;
 
 class BrandRepository {
 
+    //All Brand List withOut Pagination
     public function brandList() {
 
         $brandData = band::all();
@@ -15,6 +17,17 @@ class BrandRepository {
         return $brandData;
     }
 
+    //All Brand List with Pagination
+    public function brandListWithPagination() {
+
+        $brandData = band::orderBy( 'id', 'desc' )->paginate( 5 );
+
+        $brandData = BrandResource::collection( $brandData )->response()->getData( true );
+
+        return $brandData;
+    }
+
+    //Single Brand Item by ID
     public function singleBrandProducts( $id ) {
 
         $singleBrandProductData = product::where( 'brand_id', $id )->with( 'brand' )->get();
@@ -63,7 +76,9 @@ class BrandRepository {
         $brandUpdate->image = $request->file( 'image' ) ? 'storage/image/brand/' . $image_name : $brandUpdate->image;
         $brandUpdate->save();
 
-        return $brandUpdate;
+        $brandUpdateData = new BrandResource($brandUpdate);
+
+        return $brandUpdateData;
     }
 
     public function destroyBrand( $id ) {
