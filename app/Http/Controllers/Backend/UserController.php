@@ -7,6 +7,7 @@ use App\Http\repositories\BackendAuthRepository;
 use App\Http\Requests\AdminForgotPasswordResetRequest;
 use App\Http\Requests\AdminRequest;
 use App\Http\Requests\PasswordChangeRequest;
+use App\Http\Resources\AdminAllUserResource;
 use App\Http\Resources\AdminResource;
 use App\Mail\ForgotMail;
 use App\Models\Admin;
@@ -216,6 +217,7 @@ class UserController extends Controller {
 
     }
 
+    //password change function
     public function passwordChange( PasswordChangeRequest $request ) {
 
         try {
@@ -238,4 +240,39 @@ class UserController extends Controller {
         }
 
     }
+
+    //All User List with their role and role related Permission List
+    public function adminUserList() {
+
+        try {
+            $users = Admin::paginate( 3 );
+            $user_roles = [];
+            $user_permissions = [];
+            if ( $users ) {
+                foreach ( $users AS $user ) {
+                    $user_roles[$user->id] = $user->getRoleNames();
+                    $user_permissions[$user->id] = $user->getAllPermissions();
+                }
+            }
+
+            $adminUserList = AdminAllUserResource::collection( $users )->response()->getData( true );
+
+            return response()->json( [
+                "success"       => true,
+                "message"       => "Admin All user List",
+                "adminUserList" => $adminUserList,
+            ] );
+
+        } catch ( \Exception $e ) {
+
+            $error = $e->getMessage();
+            return response()->json( [
+                'success' => false,
+                'message' => 'There is some Problems',
+                'data'    => $error,
+            ], 500 );
+        }
+
+    }
+
 }

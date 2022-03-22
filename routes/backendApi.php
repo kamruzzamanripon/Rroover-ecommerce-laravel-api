@@ -24,6 +24,7 @@ Route::group( ['middleware' => ['auth:admin', 'scopes:admin']], function () {
     Route::post( 'logout', [UserController::class, 'logOut'] );
     Route::post( 'register', [UserController::class, 'adminRegister'] );
     Route::post( 'password/password-change', [UserController::class, 'passwordChange'] );
+    Route::get( 'user-list', [UserController::class, 'adminUserList'] );
 
     Route::get( 'category', [CategoryController::class, 'index'] );
     Route::get( 'category/list-without-pagination', [CategoryController::class, 'listWithourPagination'] );
