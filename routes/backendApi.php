@@ -64,7 +64,7 @@ Route::group( ['middleware' => ['auth:admin', 'scopes:admin']], function () {
     Route::post( 'role/create', [RolePermissionController::class, 'roleCreate'] );
     Route::post( 'role/update/{id}', [RolePermissionController::class, 'roleUpdate'] );
     Route::delete( 'role/delete/{id}', [RolePermissionController::class, 'roleDelete'] );
-    Route::post( 'role/role-assign/{roleId}', [RolePermissionController::class, 'userRollAssign'] );
+    Route::post( 'role/role-assign', [RolePermissionController::class, 'userRollAssign'] );
     //role and permission
     Route::get( 'permission/all', [PermissionsController::class, 'index'] );
     Route::get( 'permission/all/pagination', [PermissionsController::class, 'indexAllWithPagination'] );

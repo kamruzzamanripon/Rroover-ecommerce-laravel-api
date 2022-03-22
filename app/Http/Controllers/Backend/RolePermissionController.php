@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\RoleResource;
 use App\Models\Admin;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -190,23 +189,22 @@ class RolePermissionController extends Controller {
         }
     }
 
-    public function userRollAssign( $roleId ) {
+    //User Single Role assign
+    public function userRollAssign( Request $request ) {
+        //return dd($request);
 
-        $user_id = Auth::user()->id;
-        $user = Admin::with( 'roles' )->where( 'id', $user_id )->first();
-        $role = Role::findById( $roleId );
+        $user_id = Admin::where( 'id', $request->userId )->first();
 
-        if ( $role ) {
-            $old_model_has_roll = DB::table( 'model_has_roles' )->where( 'model_id', $user_id )->delete();
+        if ( $user_id ) {
+            $old_model_has_roll = DB::table( 'model_has_roles' )->where( 'model_id', $user_id->id )->delete();
         }
 
-        //return dd( $old_model_has_roll );
-        $user->assignRole( $role->name );
+        $user_id->assignRole( $request->roleName );
 
         return response()->json( [
             "success" => true,
-            "message" => "Role succesfully Delete",
-            "newUser" => $user,
+            "message" => "Role succesfully Assign",
+            "newUser" => $user_id,
         ] );
 
     }

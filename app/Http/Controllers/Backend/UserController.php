@@ -245,7 +245,7 @@ class UserController extends Controller {
     public function adminUserList() {
 
         try {
-            $users = Admin::paginate( 3 );
+            $users = Admin::paginate( 10 );
             $user_roles = [];
             $user_permissions = [];
             if ( $users ) {
