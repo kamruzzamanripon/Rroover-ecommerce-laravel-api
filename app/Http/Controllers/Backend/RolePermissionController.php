@@ -208,4 +208,25 @@ class RolePermissionController extends Controller {
         ] );
 
     }
+
+    //User Role Assign change By User Id
+    public function userRollAssignChangeByUserId( Request $request, $id ) {
+        //return dd($request);
+
+        $user_id = Admin::where( 'id', $id )->first();
+
+        //return dd( $user_id );
+        if ( $user_id ) {
+            $old_model_has_roll = DB::table( 'model_has_roles' )->where( 'model_id', $user_id->id )->delete();
+        }
+
+        $user_id->assignRole( $request->roleName );
+
+        return response()->json( [
+            "success" => true,
+            "message" => "Role Assign Change succesfully",
+            "newUser" => $user_id,
+        ] );
+
+    }
 }

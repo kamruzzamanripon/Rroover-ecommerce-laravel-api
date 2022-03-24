@@ -275,4 +275,28 @@ class UserController extends Controller {
 
     }
 
+    public function adminUserListWithoutPagination() {
+
+        try {
+            $users = Admin::all();
+
+            $adminUserList = AdminAllUserResource::collection( $users );
+
+            return response()->json( [
+                "success"       => true,
+                "message"       => "Admin All user List",
+                "adminUserList" => $adminUserList,
+            ] );
+
+        } catch ( \Exception $e ) {
+
+            $error = $e->getMessage();
+            return response()->json( [
+                'success' => false,
+                'message' => 'There is some Problems',
+                'data'    => $error,
+            ], 500 );
+        }
+    }
+
 }

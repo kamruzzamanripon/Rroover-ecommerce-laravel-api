@@ -25,6 +25,7 @@ Route::group( ['middleware' => ['auth:admin', 'scopes:admin']], function () {
     Route::post( 'register', [UserController::class, 'adminRegister'] );
     Route::post( 'password/password-change', [UserController::class, 'passwordChange'] );
     Route::get( 'user-list', [UserController::class, 'adminUserList'] );
+    Route::get( 'user-list-all', [UserController::class, 'adminUserListWithoutPagination'] );
 
     Route::get( 'category', [CategoryController::class, 'index'] );
     Route::get( 'category/list-without-pagination', [CategoryController::class, 'listWithourPagination'] );
@@ -65,6 +66,7 @@ Route::group( ['middleware' => ['auth:admin', 'scopes:admin']], function () {
     Route::post( 'role/update/{id}', [RolePermissionController::class, 'roleUpdate'] );
     Route::delete( 'role/delete/{id}', [RolePermissionController::class, 'roleDelete'] );
     Route::post( 'role/role-assign', [RolePermissionController::class, 'userRollAssign'] );
+    Route::post( 'role/role-assign-change/{id}', [RolePermissionController::class, 'userRollAssignChangeByUserId'] );
     //role and permission
     Route::get( 'permission/all', [PermissionsController::class, 'index'] );
     Route::get( 'permission/all/pagination', [PermissionsController::class, 'indexAllWithPagination'] );

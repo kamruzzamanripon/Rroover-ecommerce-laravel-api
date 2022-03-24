@@ -12,10 +12,10 @@ class BrandController extends Controller {
     public function __construct( BrandRepository $BrandRepository ) {
         $this->BrandRepository = $BrandRepository;
 
-        // $this->middleware( 'permission:brand.access|brand.create|brand.update|brand.delete', ['only' => ['brandList']] );
-        // $this->middleware( 'permission:brand.create', ['only' => ['brandStore']] );
-        // $this->middleware( 'permission:brand.update', ['only' => ['brandUpdate']] );
-        // $this->middleware( 'permission:brand.delete', ['only' => ['destroyBrand']] );
+        $this->middleware( 'permission:brand.access', ['only' => ['brandList']] );
+        $this->middleware( 'permission:brand.create', ['only' => ['brandStore']] );
+        $this->middleware( 'permission:brand.update', ['only' => ['brandUpdate']] );
+        $this->middleware( 'permission:brand.delete', ['only' => ['destroyBrand']] );
     }
 
     //All Brand List With Pagination

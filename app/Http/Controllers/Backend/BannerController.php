@@ -11,6 +11,11 @@ class BannerController extends Controller {
 
     public function __construct( BannerRepository $BannerRepository ) {
         $this->BannerRepository = $BannerRepository;
+
+        $this->middleware( 'permission:banner.access', ['only' => ['bannerAll']] );
+        $this->middleware( 'permission:banner.create', ['only' => ['bannerStore']] );
+        $this->middleware( 'permission:banner.update', ['only' => ['updateBannerSingleById']] );
+        $this->middleware( 'permission:banner.delete', ['only' => ['deleteBannerSingleById']] );
     }
 
     public function bannerAll() {
@@ -89,7 +94,7 @@ class BannerController extends Controller {
     }
 
     public function updateBannerSingleById( BannerRequest $request, $id ) {
-        
+
         try {
 
             $brandData = $this->BannerRepository->updateBannerSingleById( $request, $id );
